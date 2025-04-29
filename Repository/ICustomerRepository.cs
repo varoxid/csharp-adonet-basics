@@ -15,5 +15,7 @@ namespace PGViewer.Model
         void UpdateCustomer(CustomerModel customer);
 
         void DeleteCustomer(int customerId);
+
+        int AddCustomer(CustomerModel customer);
     }
 }

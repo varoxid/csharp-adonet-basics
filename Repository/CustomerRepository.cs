@@ -96,5 +96,28 @@ namespace PGViewer.Repository
                 }
             }
         }
+
+        public int AddCustomer(CustomerModel customer)
+        {
+            using (var connection = GetConnection())
+            {
+                connection.Open();
+
+                string query = @"
+                    INSERT INTO Customer 
+                        (name, comment)
+                    VALUES 
+                        (@Name, @Comment)
+                    RETURNING id";
+
+                using (var command = new NpgsqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@Name", customer.Name);
+                    command.Parameters.AddWithValue("@Comment", customer.Comment ?? (object)DBNull.Value);
+
+                    return (int)command.ExecuteScalar();
+                }
+            }
+        }
     }
 }

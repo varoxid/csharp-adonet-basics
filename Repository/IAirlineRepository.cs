@@ -13,6 +13,7 @@ namespace PGViewer.Model
         (List<AirlineModel> Airlines, int TotalCount) GetAll(int pageNumber, int pageSize);
 
         void UpdateAirline(AirlineModel airline);
+        int AddAirline(AirlineModel airline);
 
         void DeleteAirline(int id);
     }

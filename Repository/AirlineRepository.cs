@@ -108,5 +108,33 @@ namespace PGViewer.Repository
                 }
             }
         }
+
+        public int AddAirline(AirlineModel airline)
+        {
+            using (var connection = GetConnection())
+            {
+                connection.Open();
+
+                string query = @"
+                    INSERT INTO Airlines 
+                        (name, alt_name, iata, icao, callsign, country, active)
+                    VALUES 
+                        (@Name, @AltName, @IATA, @ICAO, @Callsign, @Country, @Active)
+                    RETURNING id";
+
+                using (var command = new NpgsqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@Name", airline.Name);
+                    command.Parameters.AddWithValue("@AltName", airline.AltName ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue("@IATA", airline.IATA ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue("@ICAO", airline.ICAO ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue("@Callsign", airline.Callsign ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue("@Country", airline.Country ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue("@Active", airline.Active);
+
+                    return (int)command.ExecuteScalar();
+                }
+            }
+        }
     }
 }

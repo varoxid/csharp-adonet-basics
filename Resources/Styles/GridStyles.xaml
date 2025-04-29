@@ -105,4 +105,14 @@
             </Trigger>
         </Style.Triggers>
     </Style>
+
+    <Style x:Key="NewRowStyle" TargetType="DataGridRow" BasedOn="{StaticResource {x:Type DataGridRow}}">
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding RelativeSource={RelativeSource Self}, Path=IsNewItem}" Value="True">
+                <Setter Property="Background" Value="#3A1D8A"/>
+                <Setter Property="BorderBrush" Value="#7376BD"/>
+                <Setter Property="BorderThickness" Value="2"/>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
 </ResourceDictionary>

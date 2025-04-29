@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 
 namespace PGViewer.ViewModel
@@ -31,9 +32,26 @@ namespace PGViewer.ViewModel
             LastPageCommand = new ViewModelCommand(ExecuteLastPageCommand, CanExecuteLastPageCommand);
             SaveCommand = new ViewModelCommand(SaveChanges, CanSave);
             DeleteCommand = new ViewModelCommand(Delete, CanDelete);
-
+            AddNewCommand = new ViewModelCommand(AddNewCustomer, CanAddCustomer);
 
             LoadData();
+        }
+
+        private bool CanAddCustomer(object obj)
+        {
+            return true;
+        }
+
+        private void AddNewCustomer(object obj)
+        {
+            var newCustomer = new CustomerModel
+            {
+                Id = -1,
+                Name = "New Customer",
+            };
+
+            Customers.Insert(0, newCustomer);
+            SelectedCustomer = newCustomer;
         }
 
         private bool CanSave(object obj)
@@ -43,10 +61,28 @@ namespace PGViewer.ViewModel
 
         private void SaveChanges(object obj)
         {
-            if (SelectedCustomer != null)
+            if (SelectedCustomer == null)
             {
-                repository.UpdateCustomer(SelectedCustomer);
+                return;
+            }
+
+            try
+            {
+                if (SelectedCustomer.Id == -1)
+                {
+                    SelectedCustomer.Id = repository.AddCustomer(SelectedCustomer);
+                }
+                else
+                {
+                    repository.UpdateCustomer(SelectedCustomer);
+                }
+
                 LoadData();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error saving data: {ex.Message}",
+                              "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -152,6 +188,7 @@ namespace PGViewer.ViewModel
         public ICommand SaveCommand { get; }
         public ICommand DeleteCommand { get; }
 
+        public ICommand AddNewCommand { get; }
         public ICommand NextPageCommand { get; }
         public ICommand PreviousPageCommand { get; }
         public ICommand FirstPageCommand { get; }

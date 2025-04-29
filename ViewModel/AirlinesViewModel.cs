@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
+using System.Windows;
 
 namespace PGViewer.ViewModel
 {
@@ -37,9 +38,27 @@ namespace PGViewer.ViewModel
             LastPageCommand = new ViewModelCommand(ExecuteLastPageCommand, CanExecuteLastPageCommand);
             SaveCommand = new ViewModelCommand(SaveChanges, CanSaveAirline);
             DeleteCommand = new ViewModelCommand(DeleteAirline, CanDeleteAirline);
+            AddNewCommand = new ViewModelCommand(AddNewAirline, CanAddAirline);
 
 
             LoadAirlines();
+        }
+
+        private bool CanAddAirline(object obj) {
+            return true;
+        }
+
+        private void AddNewAirline(object obj)
+        {
+            var newAirline = new AirlineModel
+            {
+                Id = -1, 
+                Name = "New Airline",
+                Active = true
+            };
+
+            Airlines.Insert(0, newAirline);
+            SelectedAirline = newAirline;
         }
 
         private bool CanSaveAirline(object obj)
@@ -49,10 +68,27 @@ namespace PGViewer.ViewModel
 
         private void SaveChanges(object obj)
         {
-            if (SelectedAirline != null)
+            if (SelectedAirline == null) {
+                return;
+            }
+
+            try
             {
-                airlineRepository.UpdateAirline(SelectedAirline);
-                LoadAirlines(); 
+                if (SelectedAirline.Id == -1)
+                {
+                    SelectedAirline.Id = airlineRepository.AddAirline(SelectedAirline);
+                }
+                else
+                {
+                    airlineRepository.UpdateAirline(SelectedAirline);
+                }
+
+                LoadAirlines();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error saving data: {ex.Message}",
+                              "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -67,6 +103,15 @@ namespace PGViewer.ViewModel
             {
                 airlineRepository.DeleteAirline(SelectedAirline.Id);
                 LoadAirlines();
+            }
+        }
+
+        private void CancelChanges()
+        {
+            if (SelectedAirline?.Id == -1)
+            {
+                Airlines.Remove(SelectedAirline);
+                SelectedAirline = null;
             }
         }
 
@@ -150,6 +195,8 @@ namespace PGViewer.ViewModel
 
         public ICommand SaveCommand { get; }
         public ICommand DeleteCommand { get; }
+
+        public ICommand AddNewCommand { get; }
 
         public ICommand NextPageCommand { get; }
         public ICommand PreviousPageCommand { get; }
