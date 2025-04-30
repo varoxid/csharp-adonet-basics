@@ -190,16 +190,8 @@
                                 </Ellipse.Fill>
                             </Ellipse>
                             <Button Style="{StaticResource iconButton}"
-                                    Tag="{StaticResource color3}">
-                                <fa:IconImage Icon="Clock" Style="{StaticResource iconButtonIcon}"/>
-                            </Button>
-                            <Button Style="{StaticResource iconButton}"
-                                    Tag="{StaticResource color4}">
-                                <fa:IconImage Icon="Envelope" Style="{StaticResource iconButtonIcon}"/>
-                            </Button>
-                            <Button Style="{StaticResource iconButton}"
                                     Tag="{StaticResource color5}">
-                                <fa:IconImage Icon="Bell" Style="{StaticResource iconButtonIcon}"/>
+                                <fa:IconImage Icon="Gear" Style="{StaticResource iconButtonIcon}"/>
                             </Button>
                         </StackPanel>
 
