@@ -23,8 +23,8 @@ Then in the login window you will need to enter **admin** name and password **12
 
 ### Login
 
-![Login](Screens/login.png)
+![Login window](Screens/login_window.png)
 
 ### Airports window
 
-![Airports](Screens/airports.png)
+![Airports window](Screens/airports_window.png)
