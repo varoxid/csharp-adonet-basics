@@ -10,6 +10,7 @@ Non-functional requirements:
 * ADO.NET
 * Windows Presentation Foundation
 * MVVM pattern
+* Using PostgreSQL
 
 ## How to run
 
