@@ -9,6 +9,7 @@ The application demonstrates the following features:
 Non-functional requirements:
 * ADO.NET
 * Windows Presentation Foundation
+* MVVM pattern
 
 ## How to run
 
