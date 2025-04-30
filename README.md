@@ -9,3 +9,22 @@ The application demonstrates the following features:
 Non-functional requirements:
 * ADO.NET
 * Windows Presentation Foundation
+
+## How to run
+
+Run postgresql:
+~~~
+cd db && docker-compose up -d
+~~~
+
+Then in the login window you will need to enter **admin** name and password **12345678**
+
+## Application screenshots
+
+### Login
+
+![Login](Screens/login.png)
+
+### Airports window
+
+![Airports](Screens/airports.png)
