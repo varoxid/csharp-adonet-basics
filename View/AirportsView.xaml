@@ -80,9 +80,21 @@
                 </DataGrid>
 
                 <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0 10 0 0">
-                    <Button Content="Save Changes" Command="{Binding SaveCommand}" 
-                Width="120" Margin="5 0" Style="{StaticResource PaginationButtonStyle}"/>
-                    <Button Content="Delete" Command="{Binding DeleteCommand}" 
+                    <Button 
+                        Content="Add New" 
+                        Command="{Binding AddNewCommand}" 
+                        Width="80" 
+                        Margin="5 0" 
+                        Style="{StaticResource PaginationButtonStyle}"/>
+                    <Button 
+                        Content="Save Changes" 
+                        Command="{Binding SaveCommand}" 
+                        Width="120" 
+                        Margin="5 0" 
+                        Style="{StaticResource PaginationButtonStyle}"/>
+                    <Button 
+                        Content="Delete" 
+                        Command="{Binding DeleteCommand}" 
                 Width="80" Margin="5 0" Style="{StaticResource PaginationButtonStyle}"/>
                 </StackPanel>
 
@@ -118,9 +130,9 @@
                            Margin="5 0 5 0"/>
 
                     <ComboBox SelectedItem="{Binding PageSize, Mode=TwoWay}"
-                          Width="60"
-                          Style="{StaticResource PaginationComboBoxStyle}"
-                          Margin="5 0 5 0">
+                              Width="60"
+                              Style="{StaticResource PaginationComboBoxStyle}"
+                              Margin="5 0 5 0">
                         <system:Int32 xmlns:system="clr-namespace:System;assembly=mscorlib">5</system:Int32>
                         <system:Int32 xmlns:system="clr-namespace:System;assembly=mscorlib">10</system:Int32>
                         <system:Int32 xmlns:system="clr-namespace:System;assembly=mscorlib">20</system:Int32>
@@ -128,17 +140,17 @@
                     </ComboBox>
 
                     <Button 
-                    Content="Next" 
-                    Command="{Binding NextPageCommand}" 
-                    Width="80" 
-                    Style="{StaticResource PaginationButtonStyle}"
-                    Margin="5 0 5 0"/>
+                        Content="Next" 
+                        Command="{Binding NextPageCommand}" 
+                        Width="80" 
+                        Style="{StaticResource PaginationButtonStyle}"
+                        Margin="5 0 5 0"/>
                     <Button 
-                    Content="Last" 
-                    Command="{Binding LastPageCommand}" 
-                    Width="60" 
-                    Style="{StaticResource PaginationButtonStyle}"
-                    Margin="5 0 0 0"/>
+                        Content="Last" 
+                        Command="{Binding LastPageCommand}" 
+                        Width="60" 
+                        Style="{StaticResource PaginationButtonStyle}"
+                        Margin="5 0 0 0"/>
                 </StackPanel>
             </Grid>
         </Border>

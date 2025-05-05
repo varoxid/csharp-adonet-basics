@@ -15,5 +15,7 @@ namespace PGViewer.Model
         void UpdateAirport(AirportModel airport);
 
         void DeleteAirport(int id);
+
+        int AddAirport(AirportModel airport);
     }
 }

@@ -117,13 +117,14 @@ namespace PGViewer.Repository
 
                 string query = @"
                     INSERT INTO Airlines 
-                        (name, alt_name, iata, icao, callsign, country, active)
+                        (id, name, alt_name, iata, icao, callsign, country, active)
                     VALUES 
-                        (@Name, @AltName, @IATA, @ICAO, @Callsign, @Country, @Active)
-                    RETURNING id";
+                        (@Id, @Name, @AltName, @IATA, @ICAO, @Callsign, @Country, @Active)";
+                var airlineId = GenerateAirlineId(connection);
 
                 using (var command = new NpgsqlCommand(query, connection))
                 {
+                    command.Parameters.AddWithValue("@Id", airlineId);
                     command.Parameters.AddWithValue("@Name", airline.Name);
                     command.Parameters.AddWithValue("@AltName", airline.AltName ?? (object)DBNull.Value);
                     command.Parameters.AddWithValue("@IATA", airline.IATA ?? (object)DBNull.Value);
@@ -132,8 +133,18 @@ namespace PGViewer.Repository
                     command.Parameters.AddWithValue("@Country", airline.Country ?? (object)DBNull.Value);
                     command.Parameters.AddWithValue("@Active", airline.Active);
 
-                    return (int)command.ExecuteScalar();
+                    command.ExecuteScalar();
+                    return airlineId;
                 }
+            }
+        }
+
+        private int GenerateAirlineId(NpgsqlConnection connection)
+        {
+            string query = "SELECT COALESCE(MAX(id), 0) FROM Airlines";
+            using (var command = new NpgsqlCommand(query, connection))
+            {
+                return Convert.ToInt32(command.ExecuteScalar()) + 1;
             }
         }
     }

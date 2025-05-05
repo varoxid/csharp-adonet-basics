@@ -1,5 +1,6 @@
 ﻿using PGViewer.Model;
 using PGViewer.Repository;
+using PGViewer.View;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -44,14 +45,14 @@ namespace PGViewer.ViewModel
 
         private void AddNewCustomer(object obj)
         {
-            var newCustomer = new CustomerModel
-            {
-                Id = -1,
-                Name = "New Customer",
-            };
+            var addWindow = new AddCustomerWindow();
+            var viewModel = new AddCustomerViewModel(addWindow, this);
+            addWindow.DataContext = viewModel;
 
-            Customers.Insert(0, newCustomer);
-            SelectedCustomer = newCustomer;
+            if (addWindow.ShowDialog() == true)
+            {
+                LoadData();
+            }
         }
 
         private bool CanSave(object obj)
@@ -194,7 +195,7 @@ namespace PGViewer.ViewModel
         public ICommand FirstPageCommand { get; }
         public ICommand LastPageCommand { get; }
 
-        private void LoadData()
+        public void LoadData()
         {
             var result = repository.GetAll(CurrentPage, PageSize);
             Customers = result.Customers;

@@ -105,18 +105,29 @@ namespace PGViewer.Repository
 
                 string query = @"
                     INSERT INTO Customer 
-                        (name, comment)
+                        (id, name, comment)
                     VALUES 
-                        (@Name, @Comment)
-                    RETURNING id";
+                        (@Id, @Name, @Comment)";
 
+                var customerId = GenerateCustomerId(connection);
                 using (var command = new NpgsqlCommand(query, connection))
                 {
+                    command.Parameters.AddWithValue("@Id", customerId);
                     command.Parameters.AddWithValue("@Name", customer.Name);
                     command.Parameters.AddWithValue("@Comment", customer.Comment ?? (object)DBNull.Value);
 
-                    return (int)command.ExecuteScalar();
+                    command.ExecuteScalar();
+                    return customerId;
                 }
+            }
+        }
+
+        private int GenerateCustomerId(NpgsqlConnection connection)
+        {
+            string query = "SELECT COALESCE(MAX(id), 0) FROM Customer";
+            using (var command = new NpgsqlCommand(query, connection))
+            {
+                return Convert.ToInt32(command.ExecuteScalar()) + 1;
             }
         }
     }

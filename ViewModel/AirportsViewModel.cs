@@ -1,5 +1,6 @@
 ﻿using PGViewer.Model;
 using PGViewer.Repository;
+using PGViewer.View;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,6 +32,7 @@ namespace PGViewer.ViewModel
             LastPageCommand = new ViewModelCommand(ExecuteLastPageCommand, CanExecuteLastPageCommand);
             SaveCommand = new ViewModelCommand(SaveChanges, CanSave);
             DeleteCommand = new ViewModelCommand(Delete, CanDelete);
+            AddNewCommand = new ViewModelCommand(AddNewAirport, CanAddAirport);
 
 
             LoadData();
@@ -156,14 +158,32 @@ namespace PGViewer.ViewModel
         public ICommand PreviousPageCommand { get; }
         public ICommand FirstPageCommand { get; }
         public ICommand LastPageCommand { get; }
+        public ICommand AddNewCommand { get; }
 
-        private void LoadData()
+        public void LoadData()
         {
             var result = repository.GetAll(CurrentPage, PageSize);
             Airports = result.Airports;
             _totalCount = result.TotalCount;
 
             OnPropertyCnaged(nameof(TotalPages));
+        }
+
+        private bool CanAddAirport(object obj)
+        {
+            return true;
+        }
+
+        private void AddNewAirport(object obj)
+        {
+            var addWindow = new AddAirportWindow();
+            var viewModel = new AddAirportViewModel(addWindow, this);
+            addWindow.DataContext = viewModel;
+
+            if (addWindow.ShowDialog() == true)
+            {
+                LoadData();
+            }
         }
     }
 }

@@ -109,5 +109,43 @@ namespace PGViewer.Repository
                 }
             }
         }
+
+        public int AddAirport(AirportModel airport)
+        {
+            using (var connection = GetConnection())
+            {
+                connection.Open();
+
+                string query = @"
+                    INSERT INTO Airports 
+                        (id, airport, city, country, iata, icao, region)
+                    VALUES 
+                        (@Id, @Airport, @City, @Country, @Iata, @Icao, @Region)";
+                var airlineId = GenerateAirportId(connection);
+
+                using (var command = new NpgsqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@Id", airlineId);
+                    command.Parameters.AddWithValue("@Airport", airport.Airport);
+                    command.Parameters.AddWithValue("@City", airport.City ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue("@Country", airport.Country ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue("@Iata", airport.Iata ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue("@Icao", airport.Icao ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue("@Region", airport.Region);
+
+                    command.ExecuteScalar();
+                    return airlineId;
+                }
+            }
+        }
+
+        private int GenerateAirportId(NpgsqlConnection connection)
+        {
+            string query = "SELECT COALESCE(MAX(id), 0) FROM Airports";
+            using (var command = new NpgsqlCommand(query, connection))
+            {
+                return Convert.ToInt32(command.ExecuteScalar()) + 1;
+            }
+        }
     }
 }

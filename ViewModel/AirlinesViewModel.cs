@@ -13,6 +13,7 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
 using System.Windows;
+using PGViewer.View;
 
 namespace PGViewer.ViewModel
 {
@@ -50,15 +51,14 @@ namespace PGViewer.ViewModel
 
         private void AddNewAirline(object obj)
         {
-            var newAirline = new AirlineModel
-            {
-                Id = -1, 
-                Name = "New Airline",
-                Active = true
-            };
+            var addWindow = new AddAirlineWindow();
+            var viewModel = new AddAirlineViewModel(addWindow, this);
+            addWindow.DataContext = viewModel;
 
-            Airlines.Insert(0, newAirline);
-            SelectedAirline = newAirline;
+            if (addWindow.ShowDialog() == true)
+            {
+                LoadAirlines();
+            }
         }
 
         private bool CanSaveAirline(object obj)
@@ -74,15 +74,7 @@ namespace PGViewer.ViewModel
 
             try
             {
-                if (SelectedAirline.Id == -1)
-                {
-                    SelectedAirline.Id = airlineRepository.AddAirline(SelectedAirline);
-                }
-                else
-                {
-                    airlineRepository.UpdateAirline(SelectedAirline);
-                }
-
+                airlineRepository.UpdateAirline(SelectedAirline);
                 LoadAirlines();
             }
             catch (Exception ex)
@@ -103,15 +95,6 @@ namespace PGViewer.ViewModel
             {
                 airlineRepository.DeleteAirline(SelectedAirline.Id);
                 LoadAirlines();
-            }
-        }
-
-        private void CancelChanges()
-        {
-            if (SelectedAirline?.Id == -1)
-            {
-                Airlines.Remove(SelectedAirline);
-                SelectedAirline = null;
             }
         }
 
@@ -203,7 +186,7 @@ namespace PGViewer.ViewModel
         public ICommand FirstPageCommand { get; }
         public ICommand LastPageCommand { get; }
 
-        private void LoadAirlines()
+        public void LoadAirlines()
         {
             var result = airlineRepository.GetAll(CurrentPage, PageSize);
             Airlines = result.Airlines;
